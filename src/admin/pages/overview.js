@@ -1,47 +1,44 @@
 import React, {Component, Fragment} from "react";
 import axios from "../../services/http";
 import {baseUrl} from "../../config.json";
-import {v1} from "uuid";
 import {startLoad, stopLoad} from "../../main";
-import ReactApexChart from "react-apexcharts";
 import Header from "../../layout/header";
+import {v1} from "uuid";
+import BarChart from "../charts/BarChart";
 
 class Overview extends Component {
     state = {
-        statics: [],
-        graphs: [],
+        data: {}
     };
 
     async componentDidMount() {
         startLoad();
-
         let {data} = await axios.post(baseUrl + "/admin/dashboard");
         let state = {...this.state};
-
-        Object.getOwnPropertyNames(data).forEach((p) => {
-            if (typeof data[p] !== "object") {
-                state.statics.push({
-                    key: p,
-                    value: data[p],
-                });
-            } else {
-                state.graphs.push(data[p]);
-            }
-        });
+        state.data = data;
         this.setState(state);
         stopLoad();
-        // setInterval(() => {
-        //     this.forceUpdate()
-        // }, 180000);
     }
 
     render() {
-        const {statics, graphs} = this.state;
-        console.log(statics);
+        const {today, yesterday, lastWeek, usage, total} = this.state.data;
 
+        if (!today && !yesterday && !lastWeek) {
+            return <Fragment/>;
+        }
+
+        const statics = [
+            {key: "today", value: today.total},
+            {key: "usage", value: usage},
+            {key: "total", value: total}
+        ];
+
+        stopLoad();
         return (
             <Fragment>
                 <Header preTitle={"Home"} title={"Overview"}/>
+
+                {/*STATIC FIGURES*/}
                 <div className="row g-5 px-md-3">
                     {!!statics &&
                     statics.map(({key, value}) => (
@@ -59,183 +56,22 @@ class Overview extends Component {
                         </div>
                     ))}
                 </div>
-                <div className={"row g-3 mx-md-2"}>
-                    {!!graphs &&
-                    graphs.map((graph, index) => {
-                        const {data, title, type, x, y} = graph;
-                        const labels = [];
-                        const values = [];
-                        data.forEach(({label, value}) => {
-                            labels.push(label);
-                            values.push(value);
-                        });
-                        let demo = {};
-                        let style = "";
 
-                        if (type === "bar") {
-                            demo = {
-                                series: [
-                                    {
-                                        name: y,
-                                        data: values,
-                                    },
-                                ],
-                                options: {
-                                    chart: {
-                                        type: "bar",
-                                    },
-                                    plotOptions: {
-                                        bar: {
-                                            horizontal: false,
-                                            endingShape: "rounded",
-                                            columnWidth: "20%",
-                                            borderRadius: 4,
-                                        },
-                                    },
-                                    colors: [
-                                        "#403294",
-                                        "#f3b53e",
-                                        "#55bb89",
-                                        "#df3323",
-                                        "#67e4ed",
-                                    ],
+                {/*GRAPHS*/}
+                <h1 className={"text-muted px-md-5"}>Today</h1>
+                <div className={"row g-3 px-md-3"}>
 
-                                    dataLabels: {
-                                        enabled: false,
-                                    },
-                                    stroke: {
-                                        show: true,
-                                        width: 2,
-                                        colors: ["transparent"],
-                                    },
-                                    xaxis: {
-                                        categories: labels,
-                                        labels: {
-                                            formatter: function (value, timestamp, opts) {
-                                                if (value.includes("@"))
-                                                    return value
-                                                        .substr(0, value.indexOf("@"))
-                                                        .toUpperCase();
-                                                return value;
-                                            },
-                                        },
-                                    },
-                                    yaxis: {
-                                        title: {
-                                            text: y,
-                                        },
-                                    },
-                                    fill: {
-                                        opacity: 1,
-                                    },
-                                },
-                            };
-                            style = "bar";
-                            return (
-                                <div className={"col-md-6"} key={index}>
-                                    <div className="card shadow mb-5">
-                                        <div className="card-header">
-                                            <h4 className="card-header-title">{title}</h4>
-                                        </div>
-                                        <div className="card-body">
-                                            <ReactApexChart
-                                                options={demo.options}
-                                                series={demo.series}
-                                                type={style}
-                                                height={350}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        } else if (type === "donut") {
-                            demo = {
-                                series: values,
-                                options: {
-                                    labels: labels,
-                                    chart: {
-                                        type: "donut",
-                                        height: "400px",
-                                    },
-                                    colors: [
-                                        "#403294",
-                                        "#f3b53e",
-                                        "#55bb89",
-                                        "#df3323",
-                                        "#67e4ed",
-                                    ],
-                                },
-                            };
-                            style = "donut";
-                            return (
-                                <div className={"col-md-6"} key={index}>
-                                    <div className="card shadow mb-5">
-                                        <div className="card-header">
-                                            <h4 className="card-header-title">{title}</h4>
-                                        </div>
-                                        <div className="card-body">
-                                            <ReactApexChart
-                                                options={demo.options}
-                                                series={demo.series}
-                                                type={style}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        } else if (type === "area") {
-                            demo = {
-                                series: [
-                                    {
-                                        name: y,
-                                        data: values,
-                                    },
-                                ],
-                                options: {
-                                    chart: {
-                                        type: "area",
-                                        height: 350,
-                                        zoom: {
-                                            enabled: false,
-                                        },
-                                    },
-                                    dataLabels: {
-                                        enabled: false,
-                                    },
-                                    stroke: {
-                                        curve: "smooth",
-                                    },
-                                    labels: labels,
-                                    xaxis: {
-                                        type: "datetime",
-                                    },
-                                    yaxis: {
-                                        opposite: false,
-                                    },
-                                    legend: {
-                                        horizontalAlign: "left",
-                                    },
-                                },
-                            };
-                            return (
-                                <div className={"col-md-6"} key={index}>
-                                    <div className="card shadow mb-5">
-                                        <div className="card-header">
-                                            <h4 className="card-header-title">{title}</h4>
-                                        </div>
-                                        <div className="card-body">
-                                            <ReactApexChart
-                                                options={demo.options}
-                                                series={demo.series}
-                                                type={"area"}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        }
-                    })}
+                    <div className={"col-lg-7 mb-5"}>
+                        <BarChart title={"Calls"}
+                                  toggler={true}
+                                  toggleText={"Comparison"}
+                                  data={today['customerCalls']}
+                                  toggleData={yesterday['customerCalls']}/>
+                    </div>
+
                 </div>
+
+
             </Fragment>
         );
     }
