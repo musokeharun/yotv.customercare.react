@@ -1,13 +1,11 @@
 import React, {Fragment, useEffect} from "react";
 import {Redirect, Route, Switch} from "react-router-dom";
-
-import Admin from "./Admin";
+import Admin from "./admin";
 import Loader from "react-loader-spinner";
 import {getToken} from "./auth/auth";
 import Login from "./auth/login";
 import User from "./user";
-
-// import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/theme.bundle.css";
 import "bootstrap/dist/js/bootstrap.bundle";
 import "font-awesome/css/font-awesome.min.css";
@@ -59,6 +57,6 @@ export const startLoad = () => {
 
 export const stopLoad = () => {
     document.getElementById("loader").style.display = "none";
-}
+};
 
 export default Main;

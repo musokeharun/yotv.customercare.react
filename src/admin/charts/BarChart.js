@@ -18,7 +18,7 @@ class BarChart extends Component {
                 },
             },
             colors: [
-                "#2c7be5",
+                "#2c7be5","rgba(44,123,229,0.39)"
             ],
             dataLabels: {
                 enabled: false,
@@ -48,7 +48,7 @@ class BarChart extends Component {
             fill: {
                 opacity: 1,
             },
-        }
+        },
     };
 
 
@@ -63,12 +63,11 @@ class BarChart extends Component {
         const {toggled, options} = this.state;
         const {title, toggleText, toggler, data, toggleData} = this.props;
 
-        let labels = data.map(i => i['label']);
-        // console.log(data)
-        // console.log(labels)
-        options.xaxis.categories = labels;
+        options.xaxis.categories = data.map(i => i['label']);
         const series = [{name: title, data: data.map(i => i['value'])}];
-        // console.log(series);
+        if (toggled) {
+            series.push({name: toggleText, data: toggleData.map(i => i['value'])});
+        }
 
         return (
             <Fragment>

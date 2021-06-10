@@ -122,7 +122,7 @@ export default function SideIcons() {
                                 <div className="collapse" id="sidebarReports">
                                     <ul className="nav nav-sm flex-column">
                                         <li className="nav-item">
-                                            <NavLink to={"/admin/reports/"} className="nav-link text-dark">
+                                            <NavLink to={"/admin/reports"} className="nav-link text-dark">
                                                 Build Report
                                             </NavLink>
                                         </li>
