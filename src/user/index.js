@@ -104,7 +104,6 @@ export default class User extends Component {
         await this.fetchNumber();
     }
 
-
     render() {
         let {number, responses, others} = this.state;
         // const {email} = this.props;
@@ -198,7 +197,7 @@ export default class User extends Component {
                                                     <div className={"card-body"}>
                                                         <h6>{property.toUpperCase()}</h6>
                                                         <Select
-                                                            handleChange={(name, value) => this.handleChange(name, value)}
+                                                            handleChange={({currentTarget}) => this.handleChange(currentTarget.name, currentTarget.value)}
                                                             name={property} label={property}
                                                             currentValue={responses[property].value}
                                                             options={responses[property].options}/>
