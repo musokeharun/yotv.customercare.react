@@ -16,7 +16,7 @@ function Main() {
 
     useEffect(() => {
         stopLoad();
-    })
+    });
     return (
         <Fragment>
             <div id={"loader"}

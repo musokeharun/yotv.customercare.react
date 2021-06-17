@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from "react";
 import axios from "../../services/http";
-import {baseUrl} from "../../config.json";
+import {baseUrl} from "../../config.js";
 import {startLoad, stopLoad} from "../../main";
 import Header from "../../layout/header";
 import {v1} from "uuid";

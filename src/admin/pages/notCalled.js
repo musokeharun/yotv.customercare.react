@@ -3,7 +3,7 @@ import Form from "../../components/common/form";
 import * as Joi from "joi-browser";
 import {startLoad, stopLoad} from "../../main";
 import axios from "../../services/http";
-import {baseUrl} from "../../config.json";
+import {baseUrl} from "../../config.js";
 import {toast} from "react-toastify";
 import classNames from "classnames";
 

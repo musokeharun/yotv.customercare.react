@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Header from "../../layout/header";
 import axios from "../../services/http";
-import {baseUrl} from "../../config.json";
+import {baseUrl} from "../../config.js";
 import {toast} from "react-toastify";
 import classNames from "classnames";
 import {v1} from "uuid";

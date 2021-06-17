@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from "../../services/http";
-import {baseUrl} from "../../config.json";
+import {baseUrl} from "../../config.js";
 import {toast} from "react-toastify";
 import {v1} from "uuid";
 import Header from "../../layout/header";
