@@ -13,12 +13,12 @@ class BarChart extends Component {
                 bar: {
                     horizontal: false,
                     endingShape: "rounded",
-                    columnWidth: "20%",
+                    columnWidth: "45%",
                     borderRadius: 5,
                 },
             },
             colors: [
-                "#2c7be5","rgba(44,123,229,0.39)"
+                "#b0c2e0","#2c7be5","rgba(44,123,229,0.39)"
             ],
             dataLabels: {
                 enabled: false,
@@ -62,9 +62,10 @@ class BarChart extends Component {
     render() {
         const {toggled, options} = this.state;
         const {title, toggleText, toggler, data, toggleData} = this.props;
+        console.log(data);
 
-        options.xaxis.categories = data.map(i => i['label']);
-        const series = [{name: title, data: data.map(i => i['value'])}];
+        options.xaxis.categories = data[0].map(i => i['label']);
+        const series = [{name: data[2], data: data[0].map(i => i['value'])},{name: data[3], data: data[1].map(i => i['value'])}];
         if (toggled) {
             series.push({name: toggleText, data: toggleData.map(i => i['value'])});
         }

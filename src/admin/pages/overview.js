@@ -3,12 +3,13 @@ import axios from "../../services/http";
 import {baseUrl} from "../../config.js";
 import {startLoad, stopLoad} from "../../main";
 import Header from "../../layout/header";
-import {v1} from "uuid";
 import BarChart from "../charts/BarChart";
 import Donut from "../charts/Donut";
 import Column from "../charts/Column";
 import Others from "../charts/Others";
 import Area from "../charts/Area";
+import $ from "jquery";
+import {element} from "prop-types";
 
 
 class Overview extends Component {
@@ -23,6 +24,13 @@ class Overview extends Component {
         state.data = data;
         this.setState(state);
         stopLoad();
+
+        let $chart = $(".chart-div");
+        let height = $chart.toArray().reduce((p, c) => p > $(c).outerHeight() ? p : $(c).outerHeight(), 0);
+        console.log(height);
+        $chart.each((index, element) => {
+            $(element).outerHeight(height);
+        })
     }
 
     render() {
@@ -32,11 +40,8 @@ class Overview extends Component {
             return <Fragment/>;
         }
 
-        const statics = [
-            {key: "today", value: today.total},
-            {key: "usage", value: usage},
-            {key: "total", value: total}
-        ];
+        console.log(today);
+        const totalCalled = today.gender.reduce((i, c) => i + Number(c.value), 0) || 0;
 
         stopLoad();
         return (
@@ -45,68 +50,113 @@ class Overview extends Component {
 
                 {/*STATIC FIGURES*/}
                 <div className="row g-5 px-md-3">
-                    {!!statics &&
-                    statics.map(({key, value}) => (
-                        <div className="col-12 col-lg-6 col-xl h-100" key={v1()}>
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="row align-items-center">
-                                        <div className="col">
-                                            <h6 className="text-uppercase text-muted mb-2">{key.toUpperCase()}</h6>
-                                            <span className="h2 mb-0"> {value.toLocaleString()}</span>
+                    <div className="col-12 col-lg-6 col-xl h-100">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="row align-items-center">
+                                    <div className="col">
+                                        <h6 className="text-uppercase text-muted mb-2">TODAY</h6>
+                                        <span className="h2 mb-0"> {today.total.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12 col-lg-6 col-xl h-100">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="row align-items-center">
+                                    <div className="col">
+                                        <div className="row g-0">
+                                            <div className="col-6 text-center">
+                                                <h6 className="text-uppercase text-muted">
+                                                    Male
+                                                </h6>
+                                                <h2 className="mb-0"
+                                                    title={today.gender[0] ? today.gender[0]['value'] : 0}>{Math.round(((today.gender[0] ? today.gender[0]['value'] : 0) / totalCalled) * 100)}%</h2>
+                                            </div>
+                                            <div className="col-6 text-center">
+                                                <h6 className="text-uppercase text-muted">
+                                                    FeMale
+                                                </h6>
+                                                <h2 className="mb-0"
+                                                    title={today.gender[1] ? today.gender[1]['value'] : 0}>{Math.round(((today.gender[1] ? today.gender[1]['value'] : 0) / totalCalled) * 100)}%</h2>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    </div>
+                    <div className="col-12 col-lg-6 col-xl h-100">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="row align-items-center">
+                                    <div className="col">
+                                        <h6 className="text-uppercase text-muted mb-2">USAGE</h6>
+                                        <span
+                                            className="h2 mb-0"> {usage.toLocaleString()} / {total.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {/*GRAPHS*/}
                 <h1 className={"text-muted px-md-5"}>Today</h1>
                 <div className={"row g-3 px-md-3"}>
 
-                    <div className={"col-lg-7  col-md-6 col-12"}>
+                    <div className={"col-lg-7 chart-div col-md-6 col-12"}>
                         <BarChart title={"Calls"}
                                   toggler={true}
                                   toggleText={"Comparison"}
-                                  data={today['customerCalls']}
+                                  data={[today['totalCalls'], today['customerCalls'], "Total", "Calls"]}
                                   toggleData={yesterday['customerCalls']}/>
                     </div>
 
-                    <div className={"col-lg-5  col-md-6 col-12 h-100"}>
+                    <div className={"col-lg-5 chart-div col-md-6 col-12 h-100"}>
                         <Donut title={"Device Availability"}
                                data={today['deviceAvailability']}
                         />
                     </div>
 
 
-                    <div className={"col-lg-8  col-md-6 col-12"}>
+                    <div className={"col-lg-7 chart-div col-md-6 col-12"}>
                         <Column title={"Responses"}
                                 data={today['customerResponse']}
                         />
                     </div>
 
-                    <div className={"col-lg-4 col-md-6 col-12"}>
+                    <div className={"col-lg-5 chart-div col-md-6 col-12 h-100"}>
+                        <Donut title={"LikelyHood"}
+                               data={today['likely']}
+                        />
+                    </div>
 
-                        <Others title={"Others"} list={today["othersLog"]}/>
-
+                    <div className={"chart-div col-md-6 col-lg"}>
+                        <Others title={"Others"} property={"other"} list={today["othersLog"]}/>
+                    </div>
+                    <div className={"chart-div col-md-6 col-lg"}>
+                        <Others title={"Resolutions"} property={"resolution"} list={today["resolution"]}/>
+                    </div>
+                    <div className={"chart-div col-md-6 col-lg"}>
+                        <Others title={"Suggestions"} property={"suggestion"} list={today["suggestions"]}/>
                     </div>
 
                 </div>
-
 
                 {/*YESTERDAY*/}
                 <h1 className={"text-muted px-md-5"}>Yesterday</h1>
                 <div className={"row g-3 px-md-3"}>
 
-                    <div className={"col-lg-7 col-md-6 col-12"}>
+                    <div className={"col-lg-7 chart-div col-md-6 col-12"}>
                         <BarChart title={"Calls"}
-                                  data={yesterday['customerCalls']}
+                                  data={[yesterday['totalCalls'], yesterday['customerCalls'], "Total", "Calls"]}
                         />
                     </div>
 
-                    <div className={"col-lg-5 col-md-6 col-12 h-100"}>
+                    <div className={"col-lg-5 chart-div col-md-6 col-12 h-100"}>
                         <Donut title={"Device Availability"}
                                data={yesterday['deviceAvailability']}
                         />
@@ -116,9 +166,9 @@ class Overview extends Component {
 
                 {/*YESTERDAY*/}
                 <h1 className={"text-muted px-md-5"}>Past Week</h1>
-                <div className={"row"}>
-                    <div className={"col-12"}>
-                        <Area title={"Total Calls"} data={lastWeek.totals}/>
+                <div className={"row g-3 px-md-3"}>
+                    <div className={"col-12 chart-div"}>
+                        <Area title={"Total Calls"} data={lastWeek['totals']}/>
                     </div>
                 </div>
 

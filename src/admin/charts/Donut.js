@@ -17,16 +17,26 @@ class Donut extends Component {
                 "#df3323",
                 "#67e4ed",
             ],
-            options : {
-                donut : {
-                    size : "100%",
+            options: {
+                donut: {
+                    size: "100%",
                 }
+            },
+            plotOptions: {
+                pie: {
+                    customScale: 1,
+                    offsetY: 5,
+                    offsetX: 10,
+                }
+            },
+            legend: {
+                position: "top"
             }
         }
     };
 
     render() {
-        const {title,data} = this.props;
+        const {title, data} = this.props;
         const {options} = this.state;
         options.labels = data.map(i => i['label']);
         const series = data.map(i => i['value']);

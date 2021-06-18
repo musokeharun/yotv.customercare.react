@@ -11,3 +11,45 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.chart-div{
+}
+
+
+/*-----------------------------------------------
+|   Scrollbar style for windows
+-----------------------------------------------*/
+.scrollbar-overlay {
+  overflow: hidden !important;
+}
+
+:root {
+  --falcon-scrollbar-bg: rgba(52, 64, 80, 0.6);
+}
+
+.scrollbar {
+  overflow: auto;
+}
+.scrollbar::-webkit-scrollbar {
+  visibility: hidden;
+  -webkit-appearance: none;
+  width: 6px;
+  height: 6px;
+  background-color: transparent;
+}
+.scrollbar::-webkit-scrollbar-thumb {
+  visibility: hidden;
+  border-radius: 3px;
+  background-color: var(--falcon-scrollbar-bg);
+}
+.scrollbar:hover::-webkit-scrollbar, .scrollbar:hover::-webkit-scrollbar-thumb, .scrollbar:focus::-webkit-scrollbar, .scrollbar:focus::-webkit-scrollbar-thumb {
+  visibility: visible;
+}
+
+
+.firefox .scrollbar {
+  overflow: auto !important;
+  scrollbar-color: var(--falcon-scrollbar-bg) transparent;
+  scrollbar-width: thin;
+}
+

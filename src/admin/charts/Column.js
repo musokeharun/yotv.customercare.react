@@ -14,6 +14,8 @@ class Column extends React.Component {
                     bar: {
                         borderRadius: 4,
                         horizontal: true,
+                        endingShape: "rounded",
+                        columnWidth: "30%",
                     }
                 },
                 dataLabels: {
