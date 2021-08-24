@@ -15373,14 +15373,11 @@ a:focus, button:focus {
 
 .navbar-vertical .navbar-nav .nav-link[data-bs-toggle=collapse]:after {
     display: block;
-    content: "\e92e";
-    font-family: Feather;
     margin-left: auto;
     transition: transform .2s
 }
 
 .navbar-vertical .navbar-nav .nav-link[data-bs-toggle=collapse][aria-expanded=true]:after {
-    transform: rotate(-180deg)
 }
 
 .navbar-vertical .navbar-nav .nav .nav-link {

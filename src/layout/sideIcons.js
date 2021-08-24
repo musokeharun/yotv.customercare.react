@@ -165,6 +165,14 @@ export default function SideIcons() {
                                     </ul>
                                 </div>
                             </li>
+                            <li className="nav-item">
+                                <Link
+                                    className="nav-link text-dark"
+                                    to={"/admin/data/free-trial"}
+                                >
+                                    Free Trial (Beta)
+                                </Link>
+                            </li>
                         </ul>
                     </div>
 

@@ -8,6 +8,7 @@ import NoCalled from "./pages/notCalled";
 import Overview from "./pages/overview";
 import DataSync from "./pages/dataSync";
 import Reports from "./pages/reports";
+import FreeTrial from "./pages/freeTrial";
 
 function Admin() {
 
@@ -23,6 +24,7 @@ function Admin() {
                         <Route path={"/admin/not/called/file/"} exact component={NoCalled}/>
                         <Route path={"/admin/overview"} exact render={() => <Overview/>}/>
                         <Route path={"/admin/data/sync"} exact render={() => <DataSync/>}/>
+                        <Route path={"/admin/data/free-trial"} exact render={() => <FreeTrial/>}/>
                         <Redirect to={"/app"}/>
                     </Switch>
                 </div>
